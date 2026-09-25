@@ -1,0 +1,737 @@
+name: Build Salon Cash V2 APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Create Android project
+        shell: bash
+        run: |
+          mkdir -p app/src/main/java/com/saloncash/app
+          mkdir -p app/src/main/assets
+          mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/drawable-nodpi
+
+          cat > settings.gradle <<'EOF'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+
+          rootProject.name = "SalonCash"
+          include(":app")
+          EOF
+
+          cat > build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application' version '8.5.2' apply false
+          }
+          EOF
+
+          cat > app/build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application'
+          }
+
+          android {
+              namespace 'com.saloncash.app'
+              compileSdk 35
+
+              defaultConfig {
+                  applicationId "com.saloncash.app"
+                  minSdk 23
+                  targetSdk 35
+                  versionCode 2
+                  versionName "2.0"
+              }
+          }
+          EOF
+
+          cat > app/src/main/res/values/strings.xml <<'EOF'
+          <resources>
+              <string name="app_name">Salon Cash</string>
+          </resources>
+          EOF
+
+          cat > app/src/main/res/values/styles.xml <<'EOF'
+          <resources>
+              <style name="AppTheme"
+                  parent="android:style/Theme.Material.Light.NoActionBar">
+                  <item name="android:fontFamily">sans</item>
+                  <item name="android:statusBarColor">#101827</item>
+                  <item name="android:navigationBarColor">#101827</item>
+                  <item name="android:windowLightStatusBar">false</item>
+              </style>
+          </resources>
+          EOF
+
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+              <application
+                  android:allowBackup="true"
+                  android:label="Salon Cash"
+                  android:theme="@style/AppTheme">
+
+                  <activity
+                      android:name=".MainActivity"
+                      android:screenOrientation="portrait"
+                      android:exported="true">
+
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+
+                  </activity>
+
+              </application>
+
+          </manifest>
+          EOF
+
+          cat > app/src/main/java/com/saloncash/app/MainActivity.java <<'EOF'
+          package com.saloncash.app;
+
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+
+          public class MainActivity extends Activity {
+
+              private WebView webView;
+
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+
+                  webView = new WebView(this);
+                  setContentView(webView);
+
+                  WebSettings settings = webView.getSettings();
+                  settings.setJavaScriptEnabled(true);
+                  settings.setDomStorageEnabled(true);
+                  settings.setDatabaseEnabled(true);
+                  settings.setAllowFileAccess(true);
+                  settings.setAllowContentAccess(true);
+
+                  webView.setWebViewClient(new WebViewClient());
+                  webView.loadUrl("file:///android_asset/index.html");
+              }
+
+              @Override
+              public void onBackPressed() {
+                  if (webView.canGoBack()) {
+                      webView.goBack();
+                  } else {
+                      super.onBackPressed();
+                  }
+              }
+          }
+          EOF
+
+      - name: Add Salon Cash V3
+        shell: bash
+        run: |
+          cat > app/src/main/assets/index.html <<'SALONHTML'
+          <!DOCTYPE html>
+          <html lang="ar" dir="rtl">
+          <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>Salon Cash</title>
+
+          <style>
+          *{box-sizing:border-box}
+          body{
+            margin:0;
+            font-family:Arial,sans-serif;
+            background:#0f172a;
+            color:#fff;
+          }
+          .header{
+            background:#111827;
+            padding:22px 16px;
+            text-align:center;
+            border-bottom:2px solid #d4af37;
+          }
+          .header h1{
+            margin:0;
+            color:#f5d76e;
+            font-size:30px;
+          }
+          .date{
+            margin-top:8px;
+            color:#cbd5e1;
+            font-size:15px;
+          }
+          .save{
+            margin-top:5px;
+            color:#86efac;
+            font-size:13px;
+          }
+          .container{
+            max-width:650px;
+            margin:auto;
+            padding:15px;
+          }
+          .summary{
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr;
+            gap:8px;
+            margin-bottom:16px;
+          }
+          .card{
+            background:#1e293b;
+            border:1px solid #334155;
+            border-radius:14px;
+            padding:14px 5px;
+            text-align:center;
+          }
+          .card small{
+            color:#cbd5e1;
+          }
+          .card strong{
+            display:block;
+            margin-top:8px;
+            font-size:21px;
+            color:#f8fafc;
+          }
+          .net strong{
+            color:#f5d76e;
+          }
+          .box{
+            background:#1e293b;
+            border:1px solid #334155;
+            border-radius:16px;
+            padding:16px;
+            margin-bottom:15px;
+          }
+          h2{
+            margin-top:0;
+            font-size:20px;
+            color:#f5d76e;
+          }
+          input{
+            width:100%;
+            padding:14px;
+            margin:6px 0 10px;
+            border:1px solid #475569;
+            border-radius:10px;
+            background:#0f172a;
+            color:white;
+            font-size:18px;
+          }
+          button{
+            width:100%;
+            border:0;
+            border-radius:10px;
+            padding:14px;
+            font-size:17px;
+            font-weight:bold;
+            cursor:pointer;
+          }
+          .incomeBtn{
+            background:#22c55e;
+            color:#052e16;
+          }
+          .advanceBtn{
+            background:#f59e0b;
+            color:#451a03;
+          }
+          .backupBtn{
+            background:#334155;
+            color:white;
+            margin-top:8px;
+          }
+          .row{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:10px;
+          }
+          .operation{
+            padding:12px;
+            background:#0f172a;
+            border-radius:10px;
+            margin-top:8px;
+            display:flex;
+            justify-content:space-between;
+            gap:10px;
+          }
+          .incomeText{color:#86efac}
+          .advanceText{color:#fbbf24}
+          table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:13px;
+          }
+          th,td{
+            padding:8px 4px;
+            border-bottom:1px solid #334155;
+            text-align:center;
+          }
+          th{color:#f5d76e}
+          .empty{
+            text-align:center;
+            color:#94a3b8;
+            padding:15px;
+          }
+          </style>
+          </head>
+
+          <body>
+
+          <div class="header">
+            <h1>Salon Cash</h1>
+            <div class="date" id="todayDate"></div>
+            <div class="save">✓ حفظ تلقائي</div>
+          </div>
+
+          <div class="container">
+
+            <div class="summary">
+              <div class="card">
+                <small>دخل اليوم</small>
+                <strong id="todayIncome">0</strong>
+              </div>
+
+              <div class="card">
+                <small>السلفة</small>
+                <strong id="todayAdvance">0</strong>
+              </div>
+
+              <div class="card net">
+                <small>الصافي</small>
+                <strong id="todayNet">0</strong>
+              </div>
+            </div>
+
+            <div class="box">
+              <h2>تسجيل الدخل</h2>
+              <input id="incomeAmount" type="number"
+                     inputmode="decimal"
+                     placeholder="أدخل المبلغ">
+              <button class="incomeBtn" onclick="addIncome()">
+                + إضافة دخل
+              </button>
+            </div>
+
+            <div class="box">
+              <h2>تسجيل سلفة</h2>
+              <input id="advanceAmount" type="number"
+                     inputmode="decimal"
+                     placeholder="أدخل مبلغ السلفة">
+              <button class="advanceBtn" onclick="addAdvance()">
+                + تسجيل سلفة
+              </button>
+            </div>
+
+            <div class="box">
+              <h2>عمليات اليوم</h2>
+              <div id="operations"></div>
+            </div>
+
+            <div class="box">
+              <h2>الجرد الأسبوعي</h2>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>اليوم</th>
+                    <th>الدخل</th>
+                    <th>السلفة</th>
+                    <th>الصافي</th>
+                  </tr>
+                </thead>
+                <tbody id="weekTable"></tbody>
+              </table>
+
+              <div class="summary" style="margin-top:14px">
+                <div class="card">
+                  <small>دخل الأسبوع</small>
+                  <strong id="weekIncome">0</strong>
+                </div>
+                <div class="card">
+                  <small>السلف</small>
+                  <strong id="weekAdvance">0</strong>
+                </div>
+                <div class="card net">
+                  <small>الصافي</small>
+                  <strong id="weekNet">0</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="box">
+              <h2>النسخة الاحتياطية</h2>
+
+              <div class="row">
+                <button class="backupBtn" onclick="backupData()">
+                  تصدير البيانات
+                </button>
+
+                <button class="backupBtn"
+                        onclick="document.getElementById('restoreFile').click()">
+                  استعادة البيانات
+                </button>
+              </div>
+
+              <input id="restoreFile"
+                     type="file"
+                     accept=".json"
+                     style="display:none"
+                     onchange="restoreData(event)">
+            </div>
+
+          </div>
+
+          <script>
+          const STORAGE_KEY = "salon_cash_v3_data";
+
+          let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+          function saveData(){
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          }
+
+          function dateKey(date = new Date()){
+            const y = date.getFullYear();
+            const m = String(date.getMonth()+1).padStart(2,"0");
+            const d = String(date.getDate()).padStart(2,"0");
+            return `${y}-${m}-${d}`;
+          }
+
+          function formatMoney(n){
+            return Number(n || 0).toFixed(2);
+          }
+
+          function displayDate(){
+            const now = new Date();
+
+            document.getElementById("todayDate").textContent =
+              now.toLocaleDateString("ar",
+                {
+                  weekday:"long",
+                  year:"numeric",
+                  month:"long",
+                  day:"numeric"
+                });
+          }
+
+          function addIncome(){
+            const input = document.getElementById("incomeAmount");
+            const amount = Number(input.value);
+
+            if(!amount || amount <= 0){
+              alert("أدخل مبلغ دخل صحيح");
+              return;
+            }
+
+            data.push({
+              type:"income",
+              amount:amount,
+              date:dateKey(),
+              time:new Date().toLocaleTimeString("ar",
+                {hour:"2-digit",minute:"2-digit"})
+            });
+
+            saveData();
+            input.value="";
+            render();
+          }
+
+          function addAdvance(){
+            const input = document.getElementById("advanceAmount");
+            const amount = Number(input.value);
+
+            if(!amount || amount <= 0){
+              alert("أدخل مبلغ سلفة صحيح");
+              return;
+            }
+
+            data.push({
+              type:"advance",
+              amount:amount,
+              date:dateKey(),
+              time:new Date().toLocaleTimeString("ar",
+                {hour:"2-digit",minute:"2-digit"})
+            });
+
+            saveData();
+            input.value="";
+            render();
+          }
+
+          function getTodayData(){
+            const today = dateKey();
+            return data.filter(x => x.date === today);
+          }
+
+          function renderToday(){
+            const items = getTodayData();
+
+            let income = 0;
+            let advance = 0;
+
+            items.forEach(x=>{
+              if(x.type === "income") income += Number(x.amount);
+              if(x.type === "advance") advance += Number(x.amount);
+            });
+
+            document.getElementById("todayIncome").textContent =
+              formatMoney(income);
+
+            document.getElementById("todayAdvance").textContent =
+              formatMoney(advance);
+
+            document.getElementById("todayNet").textContent =
+              formatMoney(income - advance);
+
+            const box = document.getElementById("operations");
+
+            if(items.length === 0){
+              box.innerHTML =
+                '<div class="empty">لا توجد عمليات مسجلة اليوم</div>';
+              return;
+            }
+
+            box.innerHTML = "";
+
+            [...items].reverse().forEach(x=>{
+              const div = document.createElement("div");
+              div.className = "operation";
+
+              const title =
+                x.type === "income" ? "دخل" : "سلفة";
+
+              const css =
+                x.type === "income"
+                ? "incomeText"
+                : "advanceText";
+
+              div.innerHTML =
+                `<span>${x.time}</span>
+                 <strong class="${css}">
+                 ${title}: ${formatMoney(x.amount)}
+                 </strong>`;
+
+              box.appendChild(div);
+            });
+          }
+
+          function startOfWeek(date){
+            const d = new Date(date);
+            const day = d.getDay();
+
+            const diff =
+              day === 6 ? 0 : day + 1;
+
+            d.setDate(d.getDate() - diff);
+            d.setHours(0,0,0,0);
+
+            return d;
+          }
+
+          function renderWeek(){
+            const start = startOfWeek(new Date());
+
+            let totalIncome = 0;
+            let totalAdvance = 0;
+
+            const tbody =
+              document.getElementById("weekTable");
+
+            tbody.innerHTML = "";
+
+            for(let i=0;i<7;i++){
+
+              const current = new Date(start);
+              current.setDate(start.getDate()+i);
+
+              const key = dateKey(current);
+
+              const items =
+                data.filter(x => x.date === key);
+
+              let income = 0;
+              let advance = 0;
+
+              items.forEach(x=>{
+                if(x.type === "income")
+                  income += Number(x.amount);
+
+                if(x.type === "advance")
+                  advance += Number(x.amount);
+              });
+
+              totalIncome += income;
+              totalAdvance += advance;
+
+              const row =
+                document.createElement("tr");
+
+              row.innerHTML =
+                `<td>
+                  ${current.toLocaleDateString("ar",
+                    {weekday:"short"})}
+                </td>
+                <td>${formatMoney(income)}</td>
+                <td>${formatMoney(advance)}</td>
+                <td>${formatMoney(income-advance)}</td>`;
+
+              tbody.appendChild(row);
+            }
+
+            document.getElementById("weekIncome").textContent =
+              formatMoney(totalIncome);
+
+            document.getElementById("weekAdvance").textContent =
+              formatMoney(totalAdvance);
+
+            document.getElementById("weekNet").textContent =
+              formatMoney(totalIncome-totalAdvance);
+          }
+
+          function backupData(){
+            const blob =
+              new Blob(
+                [JSON.stringify(data,null,2)],
+                {type:"application/json"}
+              );
+
+            const url =
+              URL.createObjectURL(blob);
+
+            const a =
+              document.createElement("a");
+
+            a.href = url;
+            a.download =
+              "Salon-Cash-Backup-" + dateKey() + ".json";
+
+            a.click();
+
+            URL.revokeObjectURL(url);
+          }
+
+          function restoreData(event){
+            const file =
+              event.target.files[0];
+
+            if(!file) return;
+
+            const reader =
+              new FileReader();
+
+            reader.onload = function(e){
+              try{
+                const restored =
+                  JSON.parse(e.target.result);
+
+                if(!Array.isArray(restored))
+                  throw new Error();
+
+                data = restored;
+                saveData();
+                render();
+
+                alert("تمت استعادة البيانات بنجاح");
+              }
+              catch(err){
+                alert("ملف النسخة الاحتياطية غير صالح");
+              }
+            };
+
+            reader.readAsText(file);
+          }
+
+          function render(){
+            displayDate();
+            renderToday();
+            renderWeek();
+          }
+
+          render();
+          </script>
+
+          </body>
+          </html>
+          SALONHTML
+
+      - name: Add custom icon if uploaded
+        shell: bash
+        run: |
+          ICON_FILE=$(find . -maxdepth 1 -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | head -n 1)
+
+          if [ -n "$ICON_FILE" ]; then
+            echo "Using icon: $ICON_FILE"
+
+            cp "$ICON_FILE" app/src/main/res/drawable-nodpi/salon_cash_icon.png
+
+            python3 <<'PY'
+          from pathlib import Path
+
+          path = Path("app/src/main/AndroidManifest.xml")
+          text = path.read_text()
+
+          text = text.replace(
+              'android:label="Salon Cash"',
+              'android:label="Salon Cash"\n'
+              '                  android:icon="@drawable/salon_cash_icon"\n'
+              '                  android:roundIcon="@drawable/salon_cash_icon"'
+          )
+
+          path.write_text(text)
+          PY
+
+          else
+            echo "No custom icon found. Building with Android default icon."
+          fi
+
+      - name: Set up Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build Salon Cash V2 APK
+        run: gradle assembleDebug
+
+      - name: Rename APK
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk Salon-Cash-V2.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Salon-Cash-V2
+          path: Salon-Cash-V2.apk
+          if-no-files-found: error
