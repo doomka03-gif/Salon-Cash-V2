@@ -1,10 +1,9 @@
-name: Build Salon Cash V3 APK
+name: Build Salon Cash V3
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -14,46 +13,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Java 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Create Android project
-        shell: bash
+      - name: Create Project
         run: |
           mkdir -p app/src/main/java/com/saloncash/app
           mkdir -p app/src/main/assets
           mkdir -p app/src/main/res/values
           mkdir -p app/src/main/res/drawable-nodpi
 
-          cat > settings.gradle <<'EOF'
-          pluginManagement {
-              repositories {
-                  google()
-                  mavenCentral()
-                  gradlePluginPortal()
-              }
-          }
+          printf '%s\n' \
+          'pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }' \
+          'dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }' \
+          'rootProject.name="SalonCash"' \
+          'include(":app")' > settings.gradle
 
-          dependencyResolutionManagement {
-              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
-
-          rootProject.name = "SalonCash"
-          include(":app")
-          EOF
-
-          cat > build.gradle <<'EOF'
-          plugins {
-              id 'com.android.application' version '8.5.2' apply false
-          }
-          EOF
+          printf '%s\n' \
+          'plugins {' \
+          "    id 'com.android.application' version '8.5.2' apply false" \
+          '}' > build.gradle
 
           cat > app/build.gradle <<'EOF'
           plugins {
@@ -82,5 +64,75 @@ jobs:
 
           cat > app/src/main/res/values/styles.xml <<'EOF'
           <resources>
-              <style name="AppTheme"
-                  parent="android:style/Theme
+              <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+                  <item name="android:fontFamily">sans</item>
+                  <item name="android:statusBarColor">#101827</item>
+                  <item name="android:navigationBarColor">#101827</item>
+                  <item name="android:windowLightStatusBar">false</item>
+              </style>
+          </resources>
+          EOF
+
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <application
+                  android:allowBackup="true"
+                  android:label="Salon Cash"
+                  android:theme="@style/AppTheme">
+                  <activity
+                      android:name=".MainActivity"
+                      android:screenOrientation="portrait"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+          cat > app/src/main/java/com/saloncash/app/MainActivity.java <<'EOF'
+          package com.saloncash.app;
+
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+
+          public class MainActivity extends Activity {
+              private WebView webView;
+
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+
+                  webView = new WebView(this);
+                  setContentView(webView);
+
+                  WebSettings s = webView.getSettings();
+                  s.setJavaScriptEnabled(true);
+                  s.setDomStorageEnabled(true);
+                  s.setDatabaseEnabled(true);
+                  s.setAllowFileAccess(true);
+                  s.setAllowContentAccess(true);
+
+                  webView.setWebViewClient(new WebViewClient());
+                  webView.loadUrl("file:///android_asset/index.html");
+              }
+          }
+          EOF
+
+      - name: Create Salon Cash V3
+        run: |
+          cat > app/src/main/assets/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="ar" dir="rtl">
+          <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>Salon Cash</title>
+          <style>
+          *{box-sizing:border-box}
+         
