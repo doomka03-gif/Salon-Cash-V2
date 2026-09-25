@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Salon Cash</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#0f172a;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+
+header{
+  background:#111827;
+  text-align:center;
+  padding:22px 15px;
+  border-bottom:2px solid #d4af37;
+}
+
+h1{
+  margin:0;
+  color:#f5d76e;
+  font-size:30px;
+}
+
+#date{
+  color:#cbd5e1;
+  margin-top:7px;
+  font-size:15px;
+}
+
+.saved{
+  color:#86efac;
+  font-size:13px;
+  margin-top:5px;
+}
+
+main{
+  max-width:650px;
+  margin:auto;
+  padding:15px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-bottom:15px;
+}
+
+.card,
+.box{
+  background:#1e293b;
+  border:1px solid #334155;
+  border-radius:14px;
+}
+
+.card{
+  text-align:center;
+  padding:13px 4px;
+}
+
+.card small{
+  color:#cbd5e1;
+}
+
+.card b{
+  display:block;
+  margin-top:7px;
+  font-size:20px;
+}
+
+.net b,
+h2{
+  color:#f5d76e;
+}
+
+.box{
+  padding:15px;
+  margin-bottom:14px;
+}
+
+h2{
+  font-size:19px;
+  margin:0 0 12px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  background:#0f172a;
+  color:#fff;
+  border:1px solid #475569;
+  border-radius:10px;
+  font-size:18px;
+  margin-bottom:9px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.income{
+  background:#22c55e;
+  color:#052e16;
+}
+
+.advance{
+  background:#f59e0b;
+  color:#451a03;
+}
+
+.backup{
+  background:#334155;
+  color:#fff;
+}
+
+.twoButtons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.operation{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  background:#0f172a;
+  border-radius:9px;
+  padding:11px;
+  margin-top:7px;
+}
+
+.green{color:#86efac}
+.yellow{color:#fbbf24}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+
+th,
+td{
+  text-align:center;
+  padding:8px 3px;
+  border-bottom:1px solid #334155;
+}
+
+th{
+  color:#f5d76e;
+}
+
+.empty{
+  text-align:center;
+  color:#94a3b8;
+  padding:14px;
+}
+
+.week{
+  background:#0f172a;
+  border:1px solid #334155;
+  border-radius:11px;
+  margin-top:9px;
+  overflow:hidden;
+}
+
+.weekHead{
+  padding:13px;
+  cursor:pointer;
+}
+
+.weekTitle{
+  text-align:center;
+  color:#f5d76e;
+  font-weight:bold;
+}
+
+.hint{
+  text-align:center;
+  color:#94a3b8;
+  font-size:12px;
+  margin:6px 0 10px;
+}
+
+.weekTotals{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+  text-align:center;
+  font-size:12px;
+}
+
+.weekTotals span{
+  background:#1e293b;
+  padding:7px;
+  border-radius:7px;
+}
+
+.weekTotals b{
+  display:block;
+  margin-top:4px;
+ 
