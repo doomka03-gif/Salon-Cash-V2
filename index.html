@@ -2,214 +2,920 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Salon Cash</title>
 
 <style>
 *{box-sizing:border-box}
-
 body{
   margin:0;
+  font-family:Arial,sans-serif;
   background:#0f172a;
   color:#fff;
-  font-family:Arial,sans-serif;
 }
-
-header{
+.header{
   background:#111827;
+  padding:22px 16px;
   text-align:center;
-  padding:22px 15px;
   border-bottom:2px solid #d4af37;
 }
-
-h1{
+.header h1{
   margin:0;
   color:#f5d76e;
   font-size:30px;
 }
-
-#date{
+.date{
+  margin-top:8px;
   color:#cbd5e1;
-  margin-top:7px;
   font-size:15px;
 }
-
-.saved{
+.save{
+  margin-top:5px;
   color:#86efac;
   font-size:13px;
-  margin-top:5px;
 }
-
-main{
+.container{
   max-width:650px;
   margin:auto;
   padding:15px;
 }
-
-.cards{
+.summary{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:7px;
-  margin-bottom:15px;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-bottom:16px;
 }
-
-.card,
-.box{
+.card{
   background:#1e293b;
   border:1px solid #334155;
   border-radius:14px;
-}
-
-.card{
+  padding:14px 5px;
   text-align:center;
-  padding:13px 4px;
 }
-
 .card small{
   color:#cbd5e1;
 }
-
-.card b{
+.card strong{
   display:block;
-  margin-top:7px;
-  font-size:20px;
+  margin-top:8px;
+  font-size:21px;
+  color:#f8fafc;
 }
-
-.net b,
-h2{
+.net strong{
   color:#f5d76e;
 }
-
 .box{
-  padding:15px;
-  margin-bottom:14px;
+  background:#1e293b;
+  border:1px solid #334155;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:15px;
 }
-
 h2{
-  font-size:19px;
-  margin:0 0 12px;
+  margin-top:0;
+  font-size:20px;
+  color:#f5d76e;
 }
-
 input{
   width:100%;
   padding:14px;
-  background:#0f172a;
-  color:#fff;
+  margin:6px 0 10px;
   border:1px solid #475569;
   border-radius:10px;
+  background:#0f172a;
+  color:white;
   font-size:18px;
-  margin-bottom:9px;
 }
-
 button{
   width:100%;
-  padding:14px;
   border:0;
   border-radius:10px;
-  font-size:16px;
+  padding:14px;
+  font-size:17px;
   font-weight:bold;
   cursor:pointer;
 }
-
-.income{
+button:disabled{
+  cursor:not-allowed;
+  opacity:.6;
+}
+.incomeBtn{
   background:#22c55e;
   color:#052e16;
 }
-
-.advance{
+.advanceBtn{
   background:#f59e0b;
   color:#451a03;
 }
-
-.backup{
+.backupBtn{
   background:#334155;
-  color:#fff;
+  color:white;
+  margin-top:8px;
 }
-
-.twoButtons{
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.operation{
+  padding:12px;
+  background:#0f172a;
+  border-radius:10px;
+  margin-top:8px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+.operationInfo{
+  min-width:0;
+  flex:1;
+}
+.operationMeta{
+  display:block;
+  color:#94a3b8;
+  font-size:12px;
+  margin-top:4px;
+  overflow-wrap:anywhere;
+}
+.deleteBtn{
+  width:auto;
+  flex:0 0 auto;
+  padding:9px 12px;
+  background:#7f1d1d;
+  color:#fecaca;
+  font-size:14px;
+}
+.incomeText{color:#86efac}
+.advanceText{color:#fbbf24}
+.weekNav{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:8px;
+  margin-bottom:12px;
 }
-
-.operation{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  background:#0f172a;
-  border-radius:9px;
+.weekNav button{
+  background:#334155;
+  color:#fff;
   padding:11px;
-  margin-top:7px;
+  font-size:14px;
 }
-
-.green{color:#86efac}
-.yellow{color:#fbbf24}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:13px;
-}
-
-th,
-td{
+.weekLabel{
+  color:#cbd5e1;
   text-align:center;
-  padding:8px 3px;
-  border-bottom:1px solid #334155;
+  margin-bottom:10px;
+  font-size:14px;
 }
-
-th{
-  color:#f5d76e;
-}
-
-.empty{
-  text-align:center;
-  color:#94a3b8;
-  padding:14px;
-}
-
-.week{
+.archiveWeek{
   background:#0f172a;
   border:1px solid #334155;
   border-radius:11px;
   margin-top:9px;
   overflow:hidden;
 }
-
-.weekHead{
-  padding:13px;
+.archiveWeek summary{
   cursor:pointer;
-}
-
-.weekTitle{
-  text-align:center;
+  padding:13px;
   color:#f5d76e;
   font-weight:bold;
 }
-
-.hint{
-  text-align:center;
-  color:#94a3b8;
-  font-size:12px;
-  margin:6px 0 10px;
-}
-
-.weekTotals{
+.archiveTotals{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:5px;
+  padding:0 10px 10px;
   text-align:center;
   font-size:12px;
 }
-
-.weekTotals span{
+.archiveTotals span{
   background:#1e293b;
-  padding:7px;
+  padding:7px 3px;
   border-radius:7px;
 }
+.archiveOperations{
+  padding:0 10px 10px;
+}
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%) translateY(25px);
+  width:min(92%,430px);
+  padding:13px 16px;
+  border-radius:10px;
+  color:#fff;
+  text-align:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s ease;
+  z-index:20;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.income{background:#166534}
+.toast.advance{background:#92400e}
+.toast.error{background:#991b1b}
+.toast.info{background:#334155}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.82);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  z-index:30;
+}
+.modal.open{display:flex}
+.modalCard{
+  width:min(100%,430px);
+  background:#1e293b;
+  border:1px solid #475569;
+  border-radius:16px;
+  padding:18px;
+}
+.modalCard p{line-height:1.8;color:#e2e8f0}
+.dangerBtn{background:#dc2626;color:#fff}
+.cancelBtn{background:#475569;color:#fff}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+th,td{
+  padding:8px 4px;
+  border-bottom:1px solid #334155;
+  text-align:center;
+}
+th{color:#f5d76e}
+.empty{
+  text-align:center;
+  color:#94a3b8;
+  padding:15px;
+}
+@media(max-width:480px){
+  .container{padding:10px}
+  .box{padding:13px}
+  .summary{gap:5px}
+  .card{padding:11px 3px}
+  .card strong{font-size:17px}
+  .row{grid-template-columns:1fr}
+  th,td{padding:7px 2px;font-size:12px}
+}
+</style>
+</head>
 
-.weekTotals b{
-  display:block;
-  margin-top:4px;
- 
+<body>
+
+<div class="header">
+  <h1>Salon Cash</h1>
+  <div class="date" id="todayDate"></div>
+  <div class="save">✓ حفظ تلقائي</div>
+</div>
+
+<div class="container">
+
+  <div class="summary">
+    <div class="card">
+      <small>دخل اليوم</small>
+      <strong id="todayIncome">0</strong>
+    </div>
+
+    <div class="card">
+      <small>السلفة</small>
+      <strong id="todayAdvance">0</strong>
+    </div>
+
+    <div class="card net">
+      <small>الصافي</small>
+      <strong id="todayNet">0</strong>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>تسجيل الدخل</h2>
+    <input id="incomeAmount" type="number"
+           inputmode="decimal"
+           min="0"
+           step="0.01"
+           placeholder="أدخل المبلغ">
+    <input id="incomeNote" type="text"
+           maxlength="200"
+           placeholder="ملاحظة الدخل (اختياري)">
+    <button id="incomeButton" class="incomeBtn" type="button">
+      + إضافة دخل
+    </button>
+  </div>
+
+  <div class="box">
+    <h2>تسجيل سلفة</h2>
+    <input id="advanceAmount" type="number"
+           inputmode="decimal"
+           min="0"
+           step="0.01"
+           placeholder="أدخل مبلغ السلفة">
+    <input id="advanceNote" type="text"
+           maxlength="200"
+           placeholder="ملاحظة السلفة (اختياري)">
+    <button id="advanceButton" class="advanceBtn" type="button">
+      + تسجيل سلفة
+    </button>
+  </div>
+
+  <div class="box">
+    <h2>عمليات اليوم</h2>
+    <div id="operations"></div>
+  </div>
+
+  <div class="box">
+    <h2>الجرد الأسبوعي</h2>
+
+    <div class="weekNav">
+      <button id="previousWeekButton" type="button">الأسبوع السابق</button>
+      <button id="currentWeekButton" type="button">الأسبوع الحالي</button>
+    </div>
+    <div class="weekLabel" id="weekLabel"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>اليوم</th>
+          <th>الدخل</th>
+          <th>السلفة</th>
+          <th>الصافي</th>
+        </tr>
+      </thead>
+      <tbody id="weekTable"></tbody>
+    </table>
+
+    <div class="summary" style="margin-top:14px">
+      <div class="card">
+        <small>دخل الأسبوع</small>
+        <strong id="weekIncome">0</strong>
+      </div>
+      <div class="card">
+        <small>السلف</small>
+        <strong id="weekAdvance">0</strong>
+      </div>
+      <div class="card net">
+        <small>الصافي</small>
+        <strong id="weekNet">0</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>الأرشيف الأسبوعي</h2>
+    <div id="weeklyArchive"></div>
+  </div>
+
+  <div class="box">
+    <h2>النسخة الاحتياطية</h2>
+
+    <div class="row">
+      <button id="backupButton" class="backupBtn" type="button">
+        تصدير البيانات
+      </button>
+
+      <button id="restoreButton" class="backupBtn" type="button">
+        استعادة البيانات
+      </button>
+    </div>
+
+    <input id="restoreFile"
+           type="file"
+           accept=".json"
+           style="display:none"
+           onchange="restoreData(event)">
+  </div>
+
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<div id="deleteModal" class="modal" role="dialog" aria-modal="true"
+     aria-labelledby="deleteTitle">
+  <div class="modalCard">
+    <h2 id="deleteTitle">تأكيد حذف العملية</h2>
+    <p id="deleteDetails"></p>
+    <div class="row">
+      <button id="confirmDeleteButton" class="dangerBtn" type="button">تأكيد الحذف</button>
+      <button id="cancelDeleteButton" class="cancelBtn" type="button">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = "salon_cash_v3_data";
+const actionLocks = {income:false, advance:false, delete:false};
+let selectedDeleteId = null;
+let weekOffset = 0;
+let toastTimer = null;
+
+function generateId(){
+  if(window.crypto && typeof window.crypto.randomUUID === "function"){
+    return window.crypto.randomUUID();
+  }
+  return "op-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+}
+
+function readStoredData(){
+  try{
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(stored) ? stored : [];
+  }
+  catch(err){
+    return [];
+  }
+}
+
+let data = readStoredData().map(item => ({
+  ...item,
+  id:item && item.id ? String(item.id) : generateId(),
+  note:item && typeof item.note === "string" ? item.note : ""
+}));
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function dateKey(date = new Date()){
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,"0");
+  const d = String(date.getDate()).padStart(2,"0");
+  return `${y}-${m}-${d}`;
+}
+
+function localDateTimeKey(date = new Date()){
+  const hh = String(date.getHours()).padStart(2,"0");
+  const mm = String(date.getMinutes()).padStart(2,"0");
+  const ss = String(date.getSeconds()).padStart(2,"0");
+  return `${dateKey(date)}T${hh}:${mm}:${ss}`;
+}
+
+function formatMoney(n){
+  return Number(n || 0).toFixed(2);
+}
+
+function formatDate(date){
+  return date.toLocaleDateString("ar", {
+    year:"numeric",
+    month:"short",
+    day:"numeric"
+  });
+}
+
+function displayDate(){
+  document.getElementById("todayDate").textContent =
+    new Date().toLocaleDateString("ar", {
+      weekday:"long",
+      year:"numeric",
+      month:"long",
+      day:"numeric"
+    });
+}
+
+function showToast(message, kind="info"){
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = "toast " + kind + " show";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.className = "toast";
+  }, 2200);
+}
+
+function parseAmount(input, label){
+  const raw = input.value.trim();
+  const amount = Number(raw);
+  if(raw === "" || !Number.isFinite(amount) || amount <= 0){
+    showToast("أدخل مبلغ " + label + " صحيحًا أكبر من صفر", "error");
+    input.focus();
+    return null;
+  }
+  return amount;
+}
+
+function addOperation(type){
+  if(actionLocks[type]) return;
+
+  const isIncome = type === "income";
+  const input = document.getElementById(isIncome ? "incomeAmount" : "advanceAmount");
+  const noteInput = document.getElementById(isIncome ? "incomeNote" : "advanceNote");
+  const button = document.getElementById(isIncome ? "incomeButton" : "advanceButton");
+  const label = isIncome ? "الدخل" : "السلفة";
+  const amount = parseAmount(input, label);
+
+  if(amount === null) return;
+
+  actionLocks[type] = true;
+  button.disabled = true;
+
+  const now = new Date();
+  data.push({
+    id:generateId(),
+    type:type,
+    amount:amount,
+    note:noteInput.value.trim(),
+    date:dateKey(now),
+    time:now.toLocaleTimeString("ar", {
+      hour:"2-digit",
+      minute:"2-digit"
+    }),
+    createdAt:localDateTimeKey(now)
+  });
+
+  saveData();
+  input.value = "";
+  noteInput.value = "";
+  render();
+  showToast(
+    isIncome ? "تمت إضافة الدخل وحفظه تلقائيًا" : "تمت إضافة السلفة وحفظها تلقائيًا",
+    isIncome ? "income" : "advance"
+  );
+
+  setTimeout(() => {
+    actionLocks[type] = false;
+    button.disabled = false;
+  }, 700);
+}
+
+function addIncome(){
+  addOperation("income");
+}
+
+function addAdvance(){
+  addOperation("advance");
+}
+
+function getTodayData(){
+  const today = dateKey();
+  return data.filter(item => item && item.date === today);
+}
+
+function operationTitle(item){
+  return item.type === "income" ? "دخل" : "سلفة";
+}
+
+function appendOperation(container, item, showDate=false, allowDelete=false){
+  const row = document.createElement("div");
+  row.className = "operation";
+
+  const info = document.createElement("div");
+  info.className = "operationInfo";
+
+  const amount = document.createElement("strong");
+  amount.className = item.type === "income" ? "incomeText" : "advanceText";
+  amount.textContent = operationTitle(item) + ": " + formatMoney(item.amount);
+  info.appendChild(amount);
+
+  const meta = document.createElement("span");
+  meta.className = "operationMeta";
+  const parts = [];
+  if(showDate) parts.push(item.date || "");
+  if(item.time) parts.push(item.time);
+  if(item.note) parts.push(item.note);
+  meta.textContent = parts.filter(Boolean).join(" • ");
+  info.appendChild(meta);
+  row.appendChild(info);
+
+  if(allowDelete){
+    const button = document.createElement("button");
+    button.className = "deleteBtn";
+    button.type = "button";
+    button.textContent = "حذف";
+    button.addEventListener("click", () => openDeleteModal(item.id));
+    row.appendChild(button);
+  }
+
+  container.appendChild(row);
+}
+
+function renderToday(){
+  const items = getTodayData();
+  let income = 0;
+  let advance = 0;
+
+  items.forEach(item => {
+    if(item.type === "income") income += Number(item.amount) || 0;
+    if(item.type === "advance") advance += Number(item.amount) || 0;
+  });
+
+  document.getElementById("todayIncome").textContent = formatMoney(income);
+  document.getElementById("todayAdvance").textContent = formatMoney(advance);
+  document.getElementById("todayNet").textContent = formatMoney(income-advance);
+
+  const box = document.getElementById("operations");
+  box.innerHTML = "";
+
+  if(items.length === 0){
+    box.innerHTML = '<div class="empty">لا توجد عمليات مسجلة اليوم</div>';
+    return;
+  }
+
+  [...items].reverse().forEach(item => {
+    appendOperation(box, item, false, true);
+  });
+}
+
+function startOfWeek(date){
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = day === 6 ? 0 : day + 1;
+  d.setDate(d.getDate() - diff);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function endOfWeek(start){
+  const end = new Date(start);
+  end.setDate(start.getDate()+6);
+  end.setHours(23,59,59,999);
+  return end;
+}
+
+function weekData(start){
+  const startKey = dateKey(start);
+  const endKey = dateKey(endOfWeek(start));
+  return data.filter(item =>
+    item && typeof item.date === "string" &&
+    item.date >= startKey && item.date <= endKey
+  );
+}
+
+function totalsFor(items){
+  return items.reduce((totals,item) => {
+    const amount = Number(item.amount) || 0;
+    if(item.type === "income") totals.income += amount;
+    if(item.type === "advance") totals.advance += amount;
+    return totals;
+  }, {income:0, advance:0});
+}
+
+function selectedWeekStart(){
+  const start = startOfWeek(new Date());
+  start.setDate(start.getDate() + weekOffset * 7);
+  return start;
+}
+
+function showPreviousWeek(){
+  weekOffset = -1;
+  renderWeek();
+}
+
+function showCurrentWeek(){
+  weekOffset = 0;
+  renderWeek();
+}
+
+function renderWeek(){
+  const start = selectedWeekStart();
+  const end = endOfWeek(start);
+  const tbody = document.getElementById("weekTable");
+  tbody.innerHTML = "";
+
+  for(let i=0;i<7;i++){
+    const current = new Date(start);
+    current.setDate(start.getDate()+i);
+    const items = data.filter(item => item && item.date === dateKey(current));
+    const totals = totalsFor(items);
+    const row = document.createElement("tr");
+    [
+      current.toLocaleDateString("ar",{weekday:"short"}),
+      formatMoney(totals.income),
+      formatMoney(totals.advance),
+      formatMoney(totals.income-totals.advance)
+    ].forEach(value => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+    tbody.appendChild(row);
+  }
+
+  const totals = totalsFor(weekData(start));
+  document.getElementById("weekIncome").textContent = formatMoney(totals.income);
+  document.getElementById("weekAdvance").textContent = formatMoney(totals.advance);
+  document.getElementById("weekNet").textContent =
+    formatMoney(totals.income-totals.advance);
+  document.getElementById("weekLabel").textContent =
+    formatDate(start) + " — " + formatDate(end);
+}
+
+function renderArchive(){
+  const archive = document.getElementById("weeklyArchive");
+  archive.innerHTML = "";
+
+  if(data.length === 0){
+    archive.innerHTML = '<div class="empty">لا توجد أسابيع مؤرشفة</div>';
+    return;
+  }
+
+  const weeks = new Map();
+  data.forEach(item => {
+    if(!item || !/^\d{4}-\d{2}-\d{2}$/.test(item.date || "")) return;
+    const parts = item.date.split("-").map(Number);
+    const localDate = new Date(parts[0],parts[1]-1,parts[2]);
+    const start = startOfWeek(localDate);
+    const key = dateKey(start);
+    if(!weeks.has(key)){
+      weeks.set(key,{start:start,items:[]});
+    }
+    weeks.get(key).items.push(item);
+  });
+
+  const ordered = [...weeks.values()].sort((a,b) => b.start-a.start);
+  ordered.forEach(week => {
+    const details = document.createElement("details");
+    details.className = "archiveWeek";
+
+    const summary = document.createElement("summary");
+    summary.textContent =
+      formatDate(week.start) + " — " + formatDate(endOfWeek(week.start));
+    details.appendChild(summary);
+
+    const totals = totalsFor(week.items);
+    const totalsBox = document.createElement("div");
+    totalsBox.className = "archiveTotals";
+    [
+      ["الدخل", totals.income],
+      ["السلف", totals.advance],
+      ["الصافي", totals.income-totals.advance]
+    ].forEach(pair => {
+      const item = document.createElement("span");
+      item.textContent = pair[0] + "\n" + formatMoney(pair[1]);
+      totalsBox.appendChild(item);
+    });
+    details.appendChild(totalsBox);
+
+    const operations = document.createElement("div");
+    operations.className = "archiveOperations";
+    [...week.items].reverse().forEach(item => {
+      appendOperation(operations,item,true,false);
+    });
+    details.appendChild(operations);
+    archive.appendChild(details);
+  });
+}
+
+function openDeleteModal(id){
+  if(actionLocks.delete) return;
+  const item = data.find(entry => entry && entry.id === id);
+  if(!item) return;
+
+  selectedDeleteId = id;
+  const lines = [
+    "نوع العملية: " + operationTitle(item),
+    "المبلغ: " + formatMoney(item.amount),
+    "التاريخ: " + (item.date || ""),
+    item.note ? "الملاحظة: " + item.note : ""
+  ].filter(Boolean);
+
+  document.getElementById("deleteDetails").textContent = lines.join("\n");
+  document.getElementById("deleteModal").classList.add("open");
+  document.getElementById("confirmDeleteButton").focus();
+}
+
+function closeDeleteModal(){
+  if(actionLocks.delete) return;
+  selectedDeleteId = null;
+  document.getElementById("deleteModal").classList.remove("open");
+}
+
+function closeDeleteFromBackdrop(event){
+  if(event.target === event.currentTarget) closeDeleteModal();
+}
+
+function confirmDelete(){
+  if(actionLocks.delete || !selectedDeleteId) return;
+
+  const index = data.findIndex(item => item && item.id === selectedDeleteId);
+  if(index < 0){
+    closeDeleteModal();
+    return;
+  }
+
+  actionLocks.delete = true;
+  const button = document.getElementById("confirmDeleteButton");
+  button.disabled = true;
+  data.splice(index,1);
+  saveData();
+  selectedDeleteId = null;
+  document.getElementById("deleteModal").classList.remove("open");
+  render();
+  showToast("تم حذف العملية وحفظ التغيير تلقائيًا","info");
+
+  setTimeout(() => {
+    actionLocks.delete = false;
+    button.disabled = false;
+  }, 700);
+}
+
+function backupData(){
+  const blob = new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "Salon-Cash-Backup-" + dateKey() + ".json";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url),0);
+  showToast("تم تجهيز النسخة الاحتياطية","info");
+}
+
+function isValidLocalDate(value){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parts = value.split("-").map(Number);
+  const date = new Date(parts[0],parts[1]-1,parts[2]);
+  return dateKey(date) === value;
+}
+
+function validateBackup(restored){
+  return Array.isArray(restored) && restored.every(item =>
+    item && typeof item === "object" &&
+    (item.type === "income" || item.type === "advance") &&
+    Number.isFinite(Number(item.amount)) &&
+    Number(item.amount) > 0 &&
+    typeof item.date === "string" &&
+    isValidLocalDate(item.date) &&
+    (item.note === undefined || typeof item.note === "string") &&
+    (item.time === undefined || typeof item.time === "string")
+  );
+}
+
+function restoreData(event){
+  const input = event.target;
+  const file = input.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(loadEvent){
+    try{
+      const restored = JSON.parse(loadEvent.target.result);
+      if(!validateBackup(restored)){
+        throw new Error("invalid backup");
+      }
+
+      if(!confirm("سيتم استبدال البيانات الحالية بالنسخة الاحتياطية. هل تريد المتابعة؟")){
+        showToast("تم إلغاء الاستيراد دون تغيير البيانات","info");
+        return;
+      }
+
+      data = restored.map(item => ({
+        ...item,
+        id:item.id ? String(item.id) : generateId(),
+        note:typeof item.note === "string" ? item.note : ""
+      }));
+      saveData();
+      render();
+      showToast("تمت استعادة البيانات بنجاح","income");
+    }
+    catch(err){
+      showToast("ملف النسخة الاحتياطية غير صالح، لم تتغير البيانات","error");
+    }
+    finally{
+      input.value = "";
+    }
+  };
+  reader.onerror = function(){
+    input.value = "";
+    showToast("تعذرت قراءة الملف، لم تتغير البيانات","error");
+  };
+  reader.readAsText(file);
+}
+
+function render(){
+  displayDate();
+  renderToday();
+  renderWeek();
+  renderArchive();
+}
+
+document.addEventListener("keydown", event => {
+  if(event.key === "Escape" &&
+     document.getElementById("deleteModal").classList.contains("open")){
+    closeDeleteModal();
+  }
+});
+
+document.getElementById("incomeButton").addEventListener("click",addIncome);
+document.getElementById("advanceButton").addEventListener("click",addAdvance);
+document.getElementById("previousWeekButton").addEventListener("click",showPreviousWeek);
+document.getElementById("currentWeekButton").addEventListener("click",showCurrentWeek);
+document.getElementById("backupButton").addEventListener("click",backupData);
+document.getElementById("restoreButton").addEventListener("click",() => {
+  document.getElementById("restoreFile").click();
+});
+document.getElementById("confirmDeleteButton").addEventListener("click",confirmDelete);
+document.getElementById("cancelDeleteButton").addEventListener("click",closeDeleteModal);
+document.getElementById("deleteModal").addEventListener("click",closeDeleteFromBackdrop);
+
+saveData();
+render();
+</script>
+
+</body>
+</html>

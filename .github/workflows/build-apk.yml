@@ -1,4 +1,4 @@
-name: Build Salon Cash V3
+name: Build Salon Cash V2 APK
 
 on:
   workflow_dispatch:
@@ -11,17 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Create Android Project
+      - name: Create Android project
         shell: bash
         run: |
           mkdir -p app/src/main/java/com/saloncash/app
@@ -29,20 +28,187 @@ jobs:
           mkdir -p app/src/main/res/values
           mkdir -p app/src/main/res/drawable-nodpi
 
+          cat > settings.gradle <<'EOF'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+
+          rootProject.name = "SalonCash"
+          include(":app")
+          EOF
+
+          cat > build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application' version '8.5.2' apply false
+          }
+          EOF
+
+          cat > app/build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application'
+          }
+
+          android {
+              namespace 'com.saloncash.app'
+              compileSdk 35
+
+              defaultConfig {
+                  applicationId "com.saloncash.app"
+                  minSdk 23
+                  targetSdk 35
+                  versionCode 2
+                  versionName "2.0"
+              }
+          }
+          EOF
+
+          cat > app/src/main/res/values/strings.xml <<'EOF'
+          <resources>
+              <string name="app_name">Salon Cash</string>
+          </resources>
+          EOF
+
+          cat > app/src/main/res/values/styles.xml <<'EOF'
+          <resources>
+              <style name="AppTheme"
+                  parent="android:style/Theme.Material.Light.NoActionBar">
+                  <item name="android:fontFamily">sans</item>
+                  <item name="android:statusBarColor">#101827</item>
+                  <item name="android:navigationBarColor">#101827</item>
+                  <item name="android:windowLightStatusBar">false</item>
+              </style>
+          </resources>
+          EOF
+
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+              <application
+                  android:allowBackup="true"
+                  android:label="Salon Cash"
+                  android:theme="@style/AppTheme">
+
+                  <activity
+                      android:name=".MainActivity"
+                      android:screenOrientation="portrait"
+                      android:exported="true">
+
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+
+                  </activity>
+
+              </application>
+
+          </manifest>
+          EOF
+
+          cat > app/src/main/java/com/saloncash/app/MainActivity.java <<'EOF'
+          package com.saloncash.app;
+
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+
+          public class MainActivity extends Activity {
+
+              private WebView webView;
+
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+
+                  webView = new WebView(this);
+                  setContentView(webView);
+
+                  WebSettings settings = webView.getSettings();
+                  settings.setJavaScriptEnabled(true);
+                  settings.setDomStorageEnabled(true);
+                  settings.setDatabaseEnabled(true);
+                  settings.setAllowFileAccess(true);
+                  settings.setAllowContentAccess(true);
+
+                  webView.setWebViewClient(new WebViewClient());
+                  webView.loadUrl("file:///android_asset/index.html");
+              }
+
+              @Override
+              public void onBackPressed() {
+                  if (webView.canGoBack()) {
+                      webView.goBack();
+                  } else {
+                      super.onBackPressed();
+                  }
+              }
+          }
+          EOF
+
+      - name: Add Salon Cash V3
+        shell: bash
+        run: |
           cp index.html app/src/main/assets/index.html
 
-          echo 'pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }' > settings.gradle
-          echo 'dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }' >> settings.gradle
-          echo 'rootProject.name = "SalonCash"' >> settings.gradle
-          echo 'include(":app")' >> settings.gradle
+      - name: Add custom icon if uploaded
+        shell: bash
+        run: |
+          ICON_FILE=$(find . -maxdepth 1 -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | head -n 1)
 
-          printf '%s\n' \
-          'plugins {' \
-          "    id 'com.android.application' version '8.5.2' apply false" \
-          '}' > build.gradle
+          if [ -n "$ICON_FILE" ]; then
+            echo "Using icon: $ICON_FILE"
 
-          printf '%s\n' \
-          "plugins { id 'com.android.application' }" \
-          '' \
-          'android {' \
-          "    namespace 'com
+            cp "$ICON_FILE" app/src/main/res/drawable-nodpi/salon_cash_icon.png
+
+            python3 <<'PY'
+          from pathlib import Path
+
+          path = Path("app/src/main/AndroidManifest.xml")
+          text = path.read_text()
+
+          text = text.replace(
+              'android:label="Salon Cash"',
+              'android:label="Salon Cash"\n'
+              '                  android:icon="@drawable/salon_cash_icon"\n'
+              '                  android:roundIcon="@drawable/salon_cash_icon"'
+          )
+
+          path.write_text(text)
+          PY
+
+          else
+            echo "No custom icon found. Building with Android default icon."
+          fi
+
+      - name: Set up Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build Salon Cash V2 APK
+        run: gradle assembleDebug
+
+      - name: Rename APK
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk Salon-Cash-V2.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Salon-Cash-V2
+          path: Salon-Cash-V2.apk
+          if-no-files-found: error
