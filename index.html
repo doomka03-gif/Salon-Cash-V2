@@ -10,11 +10,12 @@
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:#0f172a;
-  color:#fff;
+  background:#fff;
+  color:#172033;
+  color-scheme:light;
 }
 .header{
-  background:#111827;
+  background:#fff;
   padding:22px 16px;
   text-align:center;
   border-bottom:2px solid #d4af37;
@@ -26,7 +27,7 @@ body{
 }
 .date{
   margin-top:8px;
-  color:#cbd5e1;
+  color:#475569;
   font-size:15px;
 }
 .save{
@@ -46,27 +47,29 @@ body{
   margin-bottom:16px;
 }
 .card{
-  background:#1e293b;
-  border:1px solid #334155;
+  background:#fff;
+  border:1px solid #d8dee8;
+  box-shadow:0 2px 8px rgba(15,23,42,.06);
   border-radius:14px;
   padding:14px 5px;
   text-align:center;
 }
 .card small{
-  color:#cbd5e1;
+  color:#475569;
 }
 .card strong{
   display:block;
   margin-top:8px;
   font-size:21px;
-  color:#f8fafc;
+  color:#172033;
 }
 .net strong{
-  color:#f5d76e;
+  color:#8a6500;
 }
 .box{
-  background:#1e293b;
-  border:1px solid #334155;
+  background:#fff;
+  border:1px solid #d8dee8;
+  box-shadow:0 3px 12px rgba(15,23,42,.07);
   border-radius:16px;
   padding:16px;
   margin-bottom:15px;
@@ -74,17 +77,29 @@ body{
 h2{
   margin-top:0;
   font-size:20px;
-  color:#f5d76e;
+  color:#7a5a00;
 }
-input{
+input:not([type="file"]){
   width:100%;
   padding:14px;
   margin:6px 0 10px;
-  border:1px solid #475569;
+  border:1px solid #94a3b8;
   border-radius:10px;
-  background:#0f172a;
-  color:white;
+  background:#fff;
+  color:#172033;
   font-size:18px;
+}
+.fieldLabel{
+  display:block;
+  margin-top:2px;
+  color:#334155;
+  font-size:14px;
+  font-weight:bold;
+}
+#incomeDateHelp{
+  display:block;
+  margin:-4px 2px 10px;
+  color:#64748b;
 }
 button{
   width:100%;
@@ -119,7 +134,8 @@ button:disabled{
 }
 .operation{
   padding:12px;
-  background:#0f172a;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
   border-radius:10px;
   margin-top:8px;
   display:flex;
@@ -133,7 +149,7 @@ button:disabled{
 }
 .operationMeta{
   display:block;
-  color:#94a3b8;
+  color:#64748b;
   font-size:12px;
   margin-top:4px;
   overflow-wrap:anywhere;
@@ -146,8 +162,18 @@ button:disabled{
   color:#fecaca;
   font-size:14px;
 }
-.incomeText{color:#86efac}
-.advanceText{color:#fbbf24}
+.dayDeleteBtn{
+  min-width:82px;
+  padding:7px 8px;
+  font-size:12px;
+}
+.archiveDeleteBtn{
+  margin-top:12px;
+  padding:11px;
+  font-size:14px;
+}
+.incomeText{color:#15803d}
+.advanceText{color:#a16207}
 .weekNav{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -161,14 +187,14 @@ button:disabled{
   font-size:14px;
 }
 .weekLabel{
-  color:#cbd5e1;
+  color:#475569;
   text-align:center;
   margin-bottom:10px;
   font-size:14px;
 }
 .archiveWeek{
-  background:#0f172a;
-  border:1px solid #334155;
+  background:#fff;
+  border:1px solid #d8dee8;
   border-radius:11px;
   margin-top:9px;
   overflow:hidden;
@@ -176,7 +202,7 @@ button:disabled{
 .archiveWeek summary{
   cursor:pointer;
   padding:13px;
-  color:#f5d76e;
+  color:#7a5a00;
   font-weight:bold;
 }
 .archiveTotals{
@@ -188,7 +214,7 @@ button:disabled{
   font-size:12px;
 }
 .archiveTotals span{
-  background:#1e293b;
+  background:#f1f5f9;
   padding:7px 3px;
   border-radius:7px;
 }
@@ -228,12 +254,12 @@ button:disabled{
 .modal.open{display:flex}
 .modalCard{
   width:min(100%,430px);
-  background:#1e293b;
-  border:1px solid #475569;
+  background:#fff;
+  border:1px solid #cbd5e1;
   border-radius:16px;
   padding:18px;
 }
-.modalCard p{line-height:1.8;color:#e2e8f0}
+.modalCard p{line-height:1.8;color:#334155;white-space:pre-line}
 .dangerBtn{background:#dc2626;color:#fff}
 .cancelBtn{background:#475569;color:#fff}
 table{
@@ -243,13 +269,13 @@ table{
 }
 th,td{
   padding:8px 4px;
-  border-bottom:1px solid #334155;
+  border-bottom:1px solid #d8dee8;
   text-align:center;
 }
-th{color:#f5d76e}
+th{color:#7a5a00;background:#f8fafc}
 .empty{
   text-align:center;
-  color:#94a3b8;
+  color:#64748b;
   padding:15px;
 }
 @media(max-width:480px){
@@ -301,6 +327,10 @@ th{color:#f5d76e}
     <input id="incomeNote" type="text"
            maxlength="200"
            placeholder="ملاحظة الدخل (اختياري)">
+    <label class="fieldLabel" for="incomeDate">تاريخ الدخل</label>
+    <input id="incomeDate" type="date"
+           aria-describedby="incomeDateHelp">
+    <small id="incomeDateHelp">يمكن اختيار تاريخ اليوم أو أي تاريخ سابق</small>
     <button id="incomeButton" class="incomeBtn" type="button">
       + إضافة دخل
     </button>
@@ -342,6 +372,7 @@ th{color:#f5d76e}
           <th>الدخل</th>
           <th>السلفة</th>
           <th>الصافي</th>
+          <th>إجراء</th>
         </tr>
       </thead>
       <tbody id="weekTable"></tbody>
@@ -407,7 +438,7 @@ th{color:#f5d76e}
 <script>
 const STORAGE_KEY = "salon_cash_v3_data";
 const actionLocks = {income:false, advance:false, delete:false};
-let selectedDeleteId = null;
+let deleteRequest = null;
 let weekOffset = 0;
 let toastTimer = null;
 
@@ -507,6 +538,15 @@ function addOperation(type){
 
   if(amount === null) return;
 
+  const today = dateKey();
+  const incomeDateInput = document.getElementById("incomeDate");
+  const operationDate = isIncome ? incomeDateInput.value : today;
+  if(isIncome && (!isValidLocalDate(operationDate) || operationDate > today)){
+    showToast("اختر تاريخ دخل صحيحًا لا يتجاوز تاريخ اليوم", "error");
+    incomeDateInput.focus();
+    return;
+  }
+
   actionLocks[type] = true;
   button.disabled = true;
 
@@ -516,7 +556,7 @@ function addOperation(type){
     type:type,
     amount:amount,
     note:noteInput.value.trim(),
-    date:dateKey(now),
+    date:operationDate,
     time:now.toLocaleTimeString("ar", {
       hour:"2-digit",
       minute:"2-digit"
@@ -527,6 +567,7 @@ function addOperation(type){
   saveData();
   input.value = "";
   noteInput.value = "";
+  if(isIncome) incomeDateInput.value = today;
   render();
   showToast(
     isIncome ? "تمت إضافة الدخل وحفظه تلقائيًا" : "تمت إضافة السلفة وحفظها تلقائيًا",
@@ -583,7 +624,7 @@ function appendOperation(container, item, showDate=false, allowDelete=false){
     button.className = "deleteBtn";
     button.type = "button";
     button.textContent = "حذف";
-    button.addEventListener("click", () => openDeleteModal(item.id));
+    button.addEventListener("click", () => openOperationDeleteModal(item.id));
     row.appendChild(button);
   }
 
@@ -620,7 +661,7 @@ function renderToday(){
 function startOfWeek(date){
   const d = new Date(date);
   const day = d.getDay();
-  const diff = day === 6 ? 0 : day + 1;
+  const diff = (day - 5 + 7) % 7;
   d.setDate(d.getDate() - diff);
   d.setHours(0,0,0,0);
   return d;
@@ -689,6 +730,21 @@ function renderWeek(){
       cell.textContent = value;
       row.appendChild(cell);
     });
+
+    const actionCell = document.createElement("td");
+    const resetButton = document.createElement("button");
+    const currentKey = dateKey(current);
+    resetButton.className = "dangerBtn dayDeleteBtn";
+    resetButton.type = "button";
+    resetButton.textContent = "تصفير اليوم";
+    resetButton.disabled = items.length === 0;
+    resetButton.setAttribute(
+      "aria-label",
+      "تصفير يوم " + current.toLocaleDateString("ar",{weekday:"long",year:"numeric",month:"short",day:"numeric"})
+    );
+    resetButton.addEventListener("click", () => openDayDeleteModal(currentKey));
+    actionCell.appendChild(resetButton);
+    row.appendChild(actionCell);
     tbody.appendChild(row);
   }
 
@@ -750,19 +806,34 @@ function renderArchive(){
     const operations = document.createElement("div");
     operations.className = "archiveOperations";
     [...week.items].reverse().forEach(item => {
-      appendOperation(operations,item,true,false);
+      appendOperation(operations,item,true,true);
     });
+
+    const deleteWeekButton = document.createElement("button");
+    deleteWeekButton.className = "dangerBtn archiveDeleteBtn";
+    deleteWeekButton.type = "button";
+    deleteWeekButton.textContent = "حذف بيانات الأسبوع";
+    deleteWeekButton.addEventListener("click", () => openWeekDeleteModal(week.start));
+    operations.appendChild(deleteWeekButton);
     details.appendChild(operations);
     archive.appendChild(details);
   });
 }
 
-function openDeleteModal(id){
+function showDeleteModal(title, details, request){
+  if(actionLocks.delete) return;
+  deleteRequest = request;
+  document.getElementById("deleteTitle").textContent = title;
+  document.getElementById("deleteDetails").textContent = details;
+  document.getElementById("deleteModal").classList.add("open");
+  document.getElementById("confirmDeleteButton").focus();
+}
+
+function openOperationDeleteModal(id){
   if(actionLocks.delete) return;
   const item = data.find(entry => entry && entry.id === id);
   if(!item) return;
 
-  selectedDeleteId = id;
   const lines = [
     "نوع العملية: " + operationTitle(item),
     "المبلغ: " + formatMoney(item.amount),
@@ -770,14 +841,41 @@ function openDeleteModal(id){
     item.note ? "الملاحظة: " + item.note : ""
   ].filter(Boolean);
 
-  document.getElementById("deleteDetails").textContent = lines.join("\n");
-  document.getElementById("deleteModal").classList.add("open");
-  document.getElementById("confirmDeleteButton").focus();
+  showDeleteModal("تأكيد حذف العملية",lines.join("\n"),{type:"operation",id:id});
+}
+
+function openDayDeleteModal(dayKey){
+  if(actionLocks.delete) return;
+  const count = data.filter(item => item && item.date === dayKey).length;
+  if(count === 0) return;
+  showDeleteModal(
+    "تأكيد تصفير اليوم",
+    "سيتم حذف جميع عمليات الدخل والسلف المسجلة بتاريخ " + dayKey +
+    " فقط.\nعدد العمليات: " + count,
+    {type:"day",date:dayKey}
+  );
+}
+
+function openWeekDeleteModal(start){
+  if(actionLocks.delete) return;
+  const startKey = dateKey(start);
+  const endKey = dateKey(endOfWeek(start));
+  const count = data.filter(item =>
+    item && typeof item.date === "string" &&
+    item.date >= startKey && item.date <= endKey
+  ).length;
+  if(count === 0) return;
+  showDeleteModal(
+    "تأكيد حذف بيانات الأسبوع",
+    "سيتم حذف جميع عمليات الأسبوع من " + formatDate(start) +
+    " إلى " + formatDate(endOfWeek(start)) + ".\nعدد العمليات: " + count,
+    {type:"week",start:startKey,end:endKey}
+  );
 }
 
 function closeDeleteModal(){
   if(actionLocks.delete) return;
-  selectedDeleteId = null;
+  deleteRequest = null;
   document.getElementById("deleteModal").classList.remove("open");
 }
 
@@ -786,27 +884,43 @@ function closeDeleteFromBackdrop(event){
 }
 
 function confirmDelete(){
-  if(actionLocks.delete || !selectedDeleteId) return;
-
-  const index = data.findIndex(item => item && item.id === selectedDeleteId);
-  if(index < 0){
-    closeDeleteModal();
-    return;
-  }
+  if(actionLocks.delete || !deleteRequest) return;
 
   actionLocks.delete = true;
-  const button = document.getElementById("confirmDeleteButton");
-  button.disabled = true;
-  data.splice(index,1);
+  const confirmButton = document.getElementById("confirmDeleteButton");
+  const cancelButton = document.getElementById("cancelDeleteButton");
+  confirmButton.disabled = true;
+  cancelButton.disabled = true;
+
+  const request = deleteRequest;
+  const oldLength = data.length;
+  if(request.type === "operation"){
+    data = data.filter(item => !item || item.id !== request.id);
+  }
+  else if(request.type === "day"){
+    data = data.filter(item => !item || item.date !== request.date);
+  }
+  else if(request.type === "week"){
+    data = data.filter(item =>
+      !item || typeof item.date !== "string" ||
+      item.date < request.start || item.date > request.end
+    );
+  }
+
+  const deletedCount = oldLength - data.length;
   saveData();
-  selectedDeleteId = null;
+  deleteRequest = null;
   document.getElementById("deleteModal").classList.remove("open");
   render();
-  showToast("تم حذف العملية وحفظ التغيير تلقائيًا","info");
+  showToast(
+    deletedCount > 0 ? "تم الحذف وحفظ التغيير تلقائيًا" : "لم توجد بيانات للحذف",
+    "info"
+  );
 
   setTimeout(() => {
     actionLocks.delete = false;
-    button.disabled = false;
+    confirmButton.disabled = false;
+    cancelButton.disabled = false;
   }, 700);
 }
 
@@ -894,6 +1008,13 @@ function render(){
   renderArchive();
 }
 
+function initializeIncomeDate(){
+  const input = document.getElementById("incomeDate");
+  const today = dateKey();
+  input.max = today;
+  input.value = today;
+}
+
 document.addEventListener("keydown", event => {
   if(event.key === "Escape" &&
      document.getElementById("deleteModal").classList.contains("open")){
@@ -913,6 +1034,7 @@ document.getElementById("confirmDeleteButton").addEventListener("click",confirmD
 document.getElementById("cancelDeleteButton").addEventListener("click",closeDeleteModal);
 document.getElementById("deleteModal").addEventListener("click",closeDeleteFromBackdrop);
 
+initializeIncomeDate();
 saveData();
 render();
 </script>
